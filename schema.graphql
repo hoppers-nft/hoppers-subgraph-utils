@@ -12,3 +12,10 @@ type FlyStaker @entity {
   id: ID!
   staked: BigInt!
 }
+
+type VeFly  @entity {
+  id: ID!
+  flyBalance: BigInt!
+  veFlyBalance: BigInt!
+  snapshot: Int!
+}
