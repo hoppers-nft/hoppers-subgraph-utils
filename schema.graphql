@@ -1,4 +1,14 @@
-type BurnedStats @entity {
+type BurnedStat @entity {
   id: ID!
-  count: BigInt!
+  burned: BigInt!
+}
+
+type BurnedByBreeding @entity {
+  id: ID!
+  burned: BigInt!
+}
+
+type FlyStaker @entity {
+  id: ID!
+  staked: BigInt!
 }
