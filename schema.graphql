@@ -1,0 +1,4 @@
+type BurnedStats @entity {
+  id: ID!
+  count: BigInt!
+}

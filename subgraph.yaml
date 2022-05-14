@@ -1,0 +1,24 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: FLY
+    network: avalanche
+    source:
+      address: "0x78Ea3fef1c1f07348199Bf44f45b803b9B0Dbe28"
+      abi: FLY
+      startBlock: 11857022
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: FLY
+          file: ./abis/FLY.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts
