@@ -11,10 +11,6 @@ const BREEDING_ADDRESS_OLD = Address.fromHexString('0x16d5791f7c31d7e13dd7b18ae2
 const BREEDING_ADDRESS_NEW = Address.fromHexString('0x711233d6AAd35b14750F65f9CF413fa748149345')
 const VEFLY_ADDRESS = Address.fromHexString('0xbaF9a6F8A8AFd4BE0d85Ca40f025Bf364fA27324');
 
-
-
-const genMAx: BigInt = BigInt.fromI32(123);
-
 export function handleTransfer(event: Transfer): void {
   if (event.params.to.equals(Address.zero())) {
     if (event.transaction.to!.equals(BREEDING_ADDRESS_OLD) || event.transaction.to!.equals(BREEDING_ADDRESS_NEW)) {
