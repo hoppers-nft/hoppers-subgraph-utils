@@ -10,3 +10,4 @@ npm run codegen
 npm run build
 npm run deploy (deploys to the public hosted service)
 ```
+You can check the subgraph here: https://thegraph.com/hosted-service/subgraph/kontrol-apa/hoppers-subgraph-utils
