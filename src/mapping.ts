@@ -37,7 +37,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // handle staking 
-  else if (event.transaction.to!.equals(VEFLY_ADDRESS)) {
+  else if (event.params.to.equals(VEFLY_ADDRESS)) { 
     if (event.params.amount.equals(BigInt.zero())) {
       return; // staked zero, this happens
     }
@@ -52,13 +52,17 @@ export function handleTransfer(event: Transfer): void {
     staker.save();
     handleDepositToVeFly(event);
   }
-  else if (event.params.from.equals(VEFLY_ADDRESS)) {
+  else if (event.params.from.equals(VEFLY_ADDRESS)) { // params.from, the transfer is from the VEFLY addy
     if (event.params.amount.equals(BigInt.zero())) {
       log.error("{}",['Unstaked zero! This might be the error!'])
       return; // staked zero, this happens
     }
     let staker = FlyStaker.load(event.transaction.from.toHex())
     if (staker) {
+      //const unstaked = event.params.amount.toString();
+      //const before = staker.staked.toString();
+      //const after = staker.staked.minus(event.params.amount).toString();
+      //log.error("Unstaked : {}, amountBefore: {}, expected after: {}", [unstaked,before,after]);
       staker.staked = staker.staked.minus(event.params.amount);
       staker.save();
       if (staker.staked.equals(BigInt.zero())) {
