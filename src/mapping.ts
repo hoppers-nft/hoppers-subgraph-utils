@@ -4,9 +4,9 @@ import {
   BurnedStat, BurnedByBreeding, FlyStaker, VeFly
 } from "../generated/schema"
 
-const generationRateDenominator: BigInt = BigInt.fromI32(100);
-const generationRateNumerator: BigInt = BigInt.fromI32(3600000);
-const maxRatio: BigInt = BigInt.fromI32(14);
+const generationRateDenominator: BigInt = BigInt.fromI32(3600000);
+const generationRateNumerator: BigInt = BigInt.fromI32(14);
+const maxRatio: BigInt = BigInt.fromI32(100);
 const BREEDING_ADDRESS_OLD = Address.fromHexString('0x16d5791f7c31d7e13dd7b18ae2011764c4da8fbc')
 const BREEDING_ADDRESS_NEW = Address.fromHexString('0x711233d6AAd35b14750F65f9CF413fa748149345')
 const VEFLY_ADDRESS = Address.fromHexString('0xbaF9a6F8A8AFd4BE0d85Ca40f025Bf364fA27324');
@@ -109,7 +109,14 @@ function handleDepositToVeFly(event: Transfer): void {
 }
 
 function handleWithdrawFromVeFly(event: Transfer): void {
-  store.remove('VeFly', event.transaction.from.toHex())
+  let user = VeFly.load(event.transaction.from.toHex())
+  if (user) {
+    user.flyBalance = user.flyBalance.minus(event.params.amount);
+    user.veFlyBalance = BigInt.zero();
+    user.snapshot = event.block.timestamp.toI32();
+    user.save();
+  }
+  
 }
 
 
