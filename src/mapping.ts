@@ -55,23 +55,21 @@ export function handleTransfer(event: Transfer): void {
   else if (event.params.from.equals(VEFLY_ADDRESS)) { // params.from, the transfer is from the VEFLY addy
     if (event.params.amount.equals(BigInt.zero())) {
       log.error("{}",['Unstaked zero! This might be the error!'])
-      return; // staked zero, this happens
-    }
-    let staker = FlyStaker.load(event.transaction.from.toHex())
-    if (staker) {
-      //const unstaked = event.params.amount.toString();
-      //const before = staker.staked.toString();
-      //const after = staker.staked.minus(event.params.amount).toString();
-      //log.error("Unstaked : {}, amountBefore: {}, expected after: {}", [unstaked,before,after]);
-      staker.staked = staker.staked.minus(event.params.amount);
-      staker.save();
-      if (staker.staked.equals(BigInt.zero())) {
-        store.remove('FlyStaker', event.transaction.from.toHex())
-      }
     }
     else {
-      log.error("{} -> {}", ['a staker that doesnt exist has withdrawn from the contract!', event.transaction.from.toHex()])
+    	let staker = FlyStaker.load(event.transaction.from.toHex())
+    	if (staker) {
+      		staker.staked = staker.staked.minus(event.params.amount);
+      		staker.save();
+      		if (staker.staked.equals(BigInt.zero())) {
+        		store.remove('FlyStaker', event.transaction.from.toHex())
+      		}
+    	}
+    	else {
+      		log.error("{} -> {}", ['a staker that doesnt exist has withdrawn from the contract!', event.transaction.from.toHex()])
+    	}
     }
+    
     handleWithdrawFromVeFly(event);
   }
 
@@ -83,7 +81,7 @@ function calculateVeFLYBalance(event: Transfer): BigInt {
     const timeDiff = event.block.timestamp.minus(BigInt.fromI32(user.snapshot));
     const result = user.veFlyBalance.plus(((user.flyBalance.times(generationRateNumerator)).times(timeDiff)).div(generationRateDenominator))
     const maxVe = maxRatio.times(user.flyBalance);
-    if (result.gt(maxRatio)) {
+    if (result.gt(maxVe)) {
       return maxVe;
     }
     else {
